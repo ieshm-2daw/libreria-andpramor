@@ -16,10 +16,10 @@ DISPONIBILIDAD_VALORES = (
 )
 
 class Usuario(AbstractUser):
-    dni = models.CharField(max_length=9)
-    nombre = models.CharField(max_length=50)
-    direccion = models.CharField(max_length=50)
-    telefono = models.BigIntegerField(validators=[validators.MinValueValidator(100000000), validators.MaxValueValidator(999999999)])
+    dni = models.CharField(max_length=9, null=True)
+    nombre = models.CharField(max_length=50, null=True)
+    direccion = models.CharField(max_length=50, null=True)
+    telefono = models.BigIntegerField(validators=[validators.MinValueValidator(100000000), validators.MaxValueValidator(999999999)], null=True)
 
     def __str__(self):
         return self.nombre
@@ -54,7 +54,7 @@ class Libro(models.Model):
     def __str__(self):
         return self.titulo
 
-class Préstamo:
+class Prestamo:
     ESTADO_CHOICES = (
         ('prestado','Prestado'),
         ('devuelto','Devuelto',)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del libro</title>
+</head>
+<body>
+    <h1>{{ libro.titulo }}</h1>
+    {{ libro.portada }}
+    <br>
+    <br>
+    <h2>{{ libro.autores.all }}</h2>
+    {{ libro.resumen }}
+    <br><br>
+    <a href="{% url 'editar_libro' pk=libro.pk %}"><button>Editar libro</button></a>
+    <a href="{% url 'eliminar_libro' pk=libro.pk %}"><button>Eliminar libro</button></a>
+    <br><br>
+    <a href="{% url 'lista_libros' %}"><button>Volver a la lista</button></a>
+
+</body>
+</html>

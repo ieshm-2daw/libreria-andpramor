@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODERL = "libreria.Usuario"
+AUTH_USER_MODEL = "libreria.Usuario"
 
 
 # Application definition
