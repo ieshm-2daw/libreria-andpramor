@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 
 class ListViewLibros(ListView): #LISTA
     model = Libro
+    queryset=Libro.objects.filter(disponibilidad='disponible')
     template_name = 'libreria/lista_libros.html'
 
 class CreateViewLibro(CreateView): #CREATE
