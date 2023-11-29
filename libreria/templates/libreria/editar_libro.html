@@ -6,7 +6,7 @@
     <title>Editar libro</title>
 </head>
 <body>
-    <form action="{% url 'editar_libro' pk=libro.pk %}" method="post">
+    <form action="{% url 'editar_libro' pk=libro.pk %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Editar libro</button>
