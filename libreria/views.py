@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from .models import Libro
@@ -5,8 +6,16 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 
 class ListViewLibros(ListView): #LISTA
     model = Libro
-    queryset=Libro.objects.filter(disponibilidad='disponible')
+    #queryset = Libro.objects.filter(disponibilidad='disponible')
     template_name = 'libreria/lista_libros.html'
+    #Hacer la disponibilidad sobreescribiendo un metodo en lugar de con queryset
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['libros_disponibles'] = Libro.objects.filter(disponibilidad='disponible')
+        context['libros_prestados'] = Libro.objects.filter(disponibilidad='prestado')
+        return context
+
 
 class CreateViewLibro(CreateView): #CREATE
     model = Libro

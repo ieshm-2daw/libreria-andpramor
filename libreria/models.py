@@ -48,7 +48,7 @@ class Libro(models.Model):
     genero = models.CharField(max_length=20, choices=GENEROS)
     ISBN = models.BigIntegerField(validators=[validators.MinValueValidator(1000000000000), validators.MaxValueValidator(9999999999999)]) #El ISBN es un número de 13 cifras.
     resumen = models.TextField(max_length=500)
-    disponibilidad = models.CharField(max_length=30, choices=DISPONIBILIDAD_VALORES)
+    disponibilidad = models.CharField(max_length=30, choices=DISPONIBILIDAD_VALORES, default='disponible')
     portada = models.ImageField(upload_to='portadas/', null=True, blank=True)
 
     def __str__(self):

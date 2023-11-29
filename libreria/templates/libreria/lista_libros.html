@@ -11,13 +11,23 @@
     <br>
     <hr>
     <br>
-    {% for libro in libro_list %}
+    <h2>Libros disponibles</h2>
+    {% for libro in libros_disponibles %}
         <b>Titulo</b>: {{ libro.titulo }}.
         <br><br>
         <a href="{% url 'detalle_libro' pk=libro.pk %}"><button>Ver libro</button></a>
         <br><br>
     {% empty %}
-        Aún no hay libros.
+        No hay libros disponibles.
+    {% endfor %}
+    <h2>Libros prestados</h2>
+    {% for libro in libros_prestados %}
+        <b>Titulo</b>: {{ libro.titulo }}.
+        <br><br>
+        <a href="{% url 'detalle_libro' pk=libro.pk %}"><button>Ver libro</button></a>
+        <br><br>
+    {% empty %}
+        No hay libros prestados.
     {% endfor %}
 </body>
 </html>
