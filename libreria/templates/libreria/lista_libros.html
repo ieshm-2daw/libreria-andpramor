@@ -9,11 +9,13 @@
     <h1>Lista de libros</h1>
     <a href="{% url 'nuevo_libro' %}"><button>Añadir libro nuevo</button></a>
     <br>
+    <hr>
     <br>
     {% for libro in libro_list %}
         <b>Titulo</b>: {{ libro.titulo }}.
         <br><br>
         <a href="{% url 'detalle_libro' pk=libro.pk %}"><button>Ver libro</button></a>
+        <br><br>
     {% empty %}
         Aún no hay libros.
     {% endfor %}
