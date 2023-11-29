@@ -6,7 +6,7 @@
     <title>Nuevo libro</title>
 </head>
 <body>
-    <form action="{% url 'nuevo_libro' %}" method="post">
+    <form action="{% url 'nuevo_libro' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Registrar libro</button>
