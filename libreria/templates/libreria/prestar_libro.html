@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prestar libro</title>
+</head>
+<body>
+    <h1>{{ libro.titulo }}</h1>
+    <br>
+    <br>
+    {% for autor in libro.autores.all %}
+        <h2>{{ autor.nombre }}{% if not forloop.last %},{% else %}.{% endif %}</h2>
+    {% endfor %}
+    <br><br>
+    <!--formulario prestamo-->
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Prestar</button>
+    </form>
+</body>
+</html>

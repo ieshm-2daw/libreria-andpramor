@@ -19,6 +19,11 @@
     <br><br>
     <a href="{% url 'editar_libro' pk=libro.pk %}"><button>Editar libro</button></a>
     <a href="{% url 'eliminar_libro' pk=libro.pk %}"><button>Eliminar libro</button></a>
+    {% if libro.disponibilidad == 'disponible' %}
+        <a href="{% url 'prestar_libro' pk=libro.pk %}"><button>Prestar libro</button></a>
+    {% else %}
+    <a href="{% url 'devolver_libro' pk=libro.pk %}"><button>Devolver libro</button></a>
+    {% endif %}
     <br><br>
     <a href="{% url 'lista_libros' %}"><button>Volver a la lista</button></a>
 

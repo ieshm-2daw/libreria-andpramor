@@ -54,15 +54,15 @@ class Libro(models.Model):
     def __str__(self):
         return self.titulo
 
-class Prestamo:
+class Prestamo(models.Model):
     ESTADO_CHOICES = (
         ('prestado','Prestado'),
         ('devuelto','Devuelto',)
     )
-    libro_prestado = models.ForeignKey(Libro, on_delete=models.SET_NULL)
+    libro_prestado = models.ForeignKey(Libro, on_delete=models.CASCADE)
     fecha_prestamo = models.DateField()
     fecha_devolucion = models.DateField(null=True,blank=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     estado_prestamo = models.CharField(max_length=20, choices=ESTADO_CHOICES)
 
     def __str__(self):
