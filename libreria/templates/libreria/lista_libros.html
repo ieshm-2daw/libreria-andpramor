@@ -7,6 +7,17 @@
 </head>
 <body>
     <h1>Lista de libros</h1>
+    <form method="GET">
+        <select name="autor">
+            <option value="">Todos los autores</option>
+            {% for autor in autores %}
+                <option value="{{ autor.nombre }}" {% if autor.nombre == autor_seleccionado %} selected {% endif %}>
+                    {{ autor.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Filtrar">
+    </form>
     <a href="{% url 'nuevo_libro' %}"><button>Añadir libro nuevo</button></a>
     <br>
     <hr>
@@ -15,8 +26,13 @@
     {% for libro in libros_disponibles %}
         <b>Titulo</b>: {{ libro.titulo }}.
         <br><br>
+        <b>Autores</b>:
+        {% for autor in libro.autores.all %}
+            {{ autor.nombre }}{% if not forloop.last %},{% else %}.{% endif %}
+        {% endfor %}
         <a href="{% url 'detalle_libro' pk=libro.pk %}"><button>Ver libro</button></a>
         <br><br>
+        <hr>
     {% empty %}
         No hay libros disponibles.
     {% endfor %}

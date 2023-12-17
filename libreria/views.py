@@ -1,27 +1,40 @@
 from datetime import date
 from typing import Any
+from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .models import Libro, Prestamo
+from .models import Libro, Prestamo, Autor
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView #Lista y CRUD
 from django.views import View
 
 class ListViewLibros(ListView): #LISTA
     model = Libro
-    #queryset = Libro.objects.filter(disponibilidad='disponible')
     template_name = 'libreria/lista_libros.html'
-    
+
+    #Por un lado, monto el contexto que voy a pasarle a la plantilla. Necesito libros disponibles y prestados, autores con los que filtrar y si llego desde el formulario en lugar de desde el enlace, necesito el autor seleccionado.    
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        #Meter en context los autores para poder filtrar por ellos mejor.
         context = super().get_context_data(**kwargs)
-        context['libros_disponibles'] = Libro.objects.filter(disponibilidad='disponible')
-        context['libros_prestados'] = Libro.objects.filter(disponibilidad='prestado')
+        # Así lo hacía antes del filtro:
+        # context['libros_disponibles'] = Libro.objects.filter(disponibilidad='disponible')
+        # context['libros_prestados'] = Libro.objects.filter(disponibilidad='prestado')
+        # Para aplicar el filtro, en lugar de coger los libros de la base de datos, tenemos que coger los libros que devuelve el filtro:
+        queryset = self.get_queryset()
+        context['libros_disponibles'] = queryset.filter(disponibilidad='disponible')
+        context['libros_prestados'] = queryset.filter(disponibilidad='prestado')
+        context['autores'] = Autor.objects.all()
+        context['autor_seleccionado'] = self.request.GET.get('autor') #autor es como he llamado el campo select del formulario de la template, metiendo esto en el contexto puedo hacer que al usar el filtro, en el formulario salga seleccionado el autor que había usado para filtrar en lugar de que muestre de nuevo "Todos los autores".
         return context
     
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        #Un filtro. Hacer un form en la template (método get por comodidad) con filtros: autor, género por ejemplo. Vemos qué filtro está activo y filtro los libros del queryset, más sencillo que cambiar el contexto. Lo más cómodo es meter en la template un formulario con dos desplegables, de forma que el predefinido sea "Todos" y el resto de campos los valores de CHOICES para géneros y los autores que tenga. Para rellenar los desplegables, tengo que tocar el get_context_data para pasarle los géneros y los autores, y en la template, utilizar ese contexto para popuar los desplegables del formulario de filtrado.
-        return super().get(request, *args, **kwargs)
+    #Ahora definimos el conjunto de objetos que va a llegar a la template, el queryset, según el formulario del template, es decir, redefinimos el queryset según el filtro de autores.
+    def get_queryset(self) -> QuerySet[Any]:
+        #return super().get_queryset() Este es el get_queryset por defecto, que es el que devolveré al llegar a la template sin usar el formulario de filtrado de autor.
+        queryset = super().get_queryset()
+        autor = self.request.GET.get('autor') #Si llegamos desde el formulario, tendremos un valor en autor, así que guardamos su nombre para filtrar ahora.
+        if autor: #Si existe autor:
+            queryset = queryset.filter(autores__nombre__icontains=autor) #Este filtro busca en cada libro del queryset si el campo autores (autores__nombre) tiene al menos un resultado (__icontains) que coincida con el autor seleccionado
+        print(queryset)
+        return queryset #Si he filtrado, el queryset que devuelvo es el filtrado, sino, es el que devolvería por defecto.
 
 
 class CreateViewLibro(CreateView): #CREATE
