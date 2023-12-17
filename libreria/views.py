@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from .models import Libro, Prestamo
@@ -12,12 +13,15 @@ class ListViewLibros(ListView): #LISTA
     template_name = 'libreria/lista_libros.html'
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        #Meter en context los autores para poder filtrar por ellos mejor.
         context = super().get_context_data(**kwargs)
         context['libros_disponibles'] = Libro.objects.filter(disponibilidad='disponible')
         context['libros_prestados'] = Libro.objects.filter(disponibilidad='prestado')
         return context
-
-    #Un filtro, meter en listview todos los libros tal cual está en get, y hacer un post con un form en la template con filtros: autor, género por ejemplo. En el método post en esta clase, vemos qué filtro está activo y filtro los libros del contexto que le voy a pasar a la template. Lo más cómodo es meter en la template un formulario con dos desplegables, de forma que el predefinido sea "Todos" y el resto de campos los valores de CHOICES para géneros y los autores que tenga. ¿Le puedo pasar a la template los autores que tenga en la bbdd para rellenar el desplegable?
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        #Un filtro. Hacer un form en la template (método get por comodidad) con filtros: autor, género por ejemplo. Vemos qué filtro está activo y filtro los libros del queryset, más sencillo que cambiar el contexto. Lo más cómodo es meter en la template un formulario con dos desplegables, de forma que el predefinido sea "Todos" y el resto de campos los valores de CHOICES para géneros y los autores que tenga. Para rellenar los desplegables, tengo que tocar el get_context_data para pasarle los géneros y los autores, y en la template, utilizar ese contexto para popuar los desplegables del formulario de filtrado.
+        return super().get(request, *args, **kwargs)
 
 
 class CreateViewLibro(CreateView): #CREATE
