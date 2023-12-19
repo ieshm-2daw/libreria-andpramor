@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        <h2>¿Borrar libro "{{ libro.titulo }}"?</h2>
-        {{ form }}
-        <input type="submit" value="Confirmar">
-    </form>
+    <article>
+        <form method="post">
+            {% csrf_token %}
+            <h2>¿Borrar libro "{{ libro.titulo }}"?</h2>
+            {{ form }}
+            <input type="submit" value="Confirmar">
+        </form>
+    </article>
 </body>
 </html>

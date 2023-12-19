@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
 </head>
 <body>
-    <form action="{% url 'nuevo_libro' %}" enctype="multipart/form-data" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Registrar libro</button>
-    </form>
+    <article>
+        <form action="{% url 'nuevo_libro' %}" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Registrar libro</button>
+        </form>
+    </article>
 </body>
 </html>
