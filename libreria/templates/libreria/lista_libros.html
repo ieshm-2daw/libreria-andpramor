@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista libros</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
 </head>
 <body>
-    <h1>Lista de libros</h1>
+    <article>
+        <h1>Lista de libros</h1>
     <form method="GET">
         <select name="autor">
             <option value="">Todos los autores</option>
@@ -18,6 +20,7 @@
         </select>
         <input type="submit" value="Filtrar">
     </form>
+    <br><hr><br>
     <a href="{% url 'nuevo_libro' %}"><button>Añadir libro nuevo</button></a>
     <br>
     <hr>
@@ -45,5 +48,6 @@
     {% empty %}
         No hay libros prestados.
     {% endfor %}
+    </article>
 </body>
 </html>
