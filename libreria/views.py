@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .models import Libro, Prestamo, Autor
+from .models import Libro, Prestamo, Autor, Editorial
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView #Lista y CRUD
 from django.views import View
 
@@ -23,7 +23,9 @@ class ListViewLibros(ListView): #LISTA
         context['libros_disponibles'] = queryset.filter(disponibilidad='disponible')
         context['libros_prestados'] = queryset.filter(disponibilidad='prestado')
         context['autores'] = Autor.objects.all()
+        context['editoriales'] = Editorial.objects.all()
         context['autor_seleccionado'] = self.request.GET.get('autor') #autor es como he llamado el campo select del formulario de la template, metiendo esto en el contexto puedo hacer que al usar el filtro, en el formulario salga seleccionado el autor que había usado para filtrar en lugar de que muestre de nuevo "Todos los autores".
+        context['editorial_seleccionada'] = self.request.GET.get('editorial')
         return context
     
     #Ahora definimos el conjunto de objetos que va a llegar a la template, el queryset, según el formulario del template, es decir, redefinimos el queryset según el filtro de autores.
@@ -31,9 +33,11 @@ class ListViewLibros(ListView): #LISTA
         #return super().get_queryset() Este es el get_queryset por defecto, que es el que devolveré al llegar a la template sin usar el formulario de filtrado de autor.
         queryset = super().get_queryset()
         autor = self.request.GET.get('autor') #Si llegamos desde el formulario, tendremos un valor en autor, así que guardamos su nombre para filtrar ahora.
+        editorial = self.request.GET.get('editorial')
         if autor: #Si existe autor:
             queryset = queryset.filter(autores__nombre__icontains=autor) #Este filtro busca en cada libro del queryset si el campo autores (autores__nombre) tiene al menos un resultado (__icontains) que coincida con el autor seleccionado
-        print(queryset)
+        if editorial:
+            queryset = queryset.filter(editorial__nombre=editorial)
         return queryset #Si he filtrado, el queryset que devuelvo es el filtrado, sino, es el que devolvería por defecto.
 
 
