@@ -15,9 +15,9 @@
                 <select name="autor">
                     <option value="">Todos los autores</option>
                     {% for autor in autores %}
-                        <option value="{{ autor.nombre }}" {% if autor.nombre == autor_seleccionado %} selected {% endif %}>
-                            {{ autor.nombre }}
-                        </option>
+                    <option value="{{ autor.nombre }}" {% if autor.nombre == autor_seleccionado %} selected {% endif %}>
+                        {{ autor.nombre }}
+                    </option>
                     {% endfor %}
                 </select>
                 <select name="editorial">
