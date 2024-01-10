@@ -8,6 +8,13 @@
 </head>
 <body>
     <main>
+        <article>
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}"><button>Cerrar sesión</button></a>
+            {% else %}
+            <a href="{% url 'login' %}"><button>Iniciar sesión</button></a>
+            {% endif %}
+        </article>
         <h1>Lista de libros</h1>
         <section>
             <h2>Filtra entre los libros</h2>

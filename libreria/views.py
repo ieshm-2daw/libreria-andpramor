@@ -1,12 +1,12 @@
 from datetime import date
 from typing import Any
 from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from .models import Libro, Prestamo, Autor, Editorial
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView #Lista y CRUD
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class ListViewLibros(ListView): #LISTA
     model = Libro
@@ -41,7 +41,7 @@ class ListViewLibros(ListView): #LISTA
         return queryset #Si he filtrado, el queryset que devuelvo es el filtrado, sino, es el que devolvería por defecto.
 
 
-class CreateViewLibro(CreateView): #CREATE
+class CreateViewLibro(LoginRequiredMixin, CreateView): #CREATE
     model = Libro
     fields = ['titulo','autores','editorial','fecha_publicacion','genero','ISBN','resumen','disponibilidad','portada']
     template_name = 'libreria/nuevo_libro.html'
@@ -51,18 +51,18 @@ class DetailViewLibro(DetailView): #READ
     model = Libro
     template_name = 'libreria/detalle_libro.html'
 
-class UpdateViewLibro(UpdateView): #UPDATE
+class UpdateViewLibro(LoginRequiredMixin, UpdateView): #UPDATE
     model = Libro
     fields = ['titulo','autores','editorial','fecha_publicacion','genero','ISBN','resumen','disponibilidad','portada']
     template_name = 'libreria/editar_libro.html'
     success_url = reverse_lazy('lista_libros')
 
-class DeleteViewLibro(DeleteView): #DELETE
+class DeleteViewLibro(LoginRequiredMixin, DeleteView): #DELETE
     model = Libro
     template_name = 'libreria/eliminar_libro.html'
     success_url = reverse_lazy('lista_libros')
 
-class PrestamoLibro(View):
+class PrestamoLibro(LoginRequiredMixin, View):
     def get(self,request,pk):
         libro = Libro.objects.get(pk=pk)
         return render(request,'libreria/prestar_libro.html',{'libro':libro})
@@ -79,7 +79,7 @@ class PrestamoLibro(View):
         )
         return redirect('lista_libros')
     
-class DevolucionLibro(View):
+class DevolucionLibro(LoginRequiredMixin, View):
     def get(self,request,pk):
         libro = Libro.objects.get(pk=pk)
         return render(request,'libreria/devolver_libro.html',{'libro':libro})
